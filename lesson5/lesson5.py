@@ -105,7 +105,7 @@ def main():
     for key in cos_sim.keys():
         index = key[4:].replace('.txt', '')
         page = page_indexes.get(index)
-        print(page)
+        print(page_indexes.get(index) + ' ' + str(cos_sim.get(key)))
     # max_distance = max(cos_sim.items(), key=lambda x: x[1])
     # print(max_distance)
 
