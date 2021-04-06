@@ -10,8 +10,7 @@ def main():
     file_names = os.listdir(in_directory)
     os.mkdir(out_directory)
     for i in range(len(file_names)):
-        out_file_name = 'file' + str(i) + '.txt'
-        analyze_text(fh.get_file_name(file_names[i], in_directory), fh.get_file_name(out_file_name, out_directory))
+        analyze_text(fh.get_file_name(file_names[i], in_directory), fh.get_file_name(file_names[i], out_directory))
 
 
 def analyze_text(file_in_name, file_out_name):

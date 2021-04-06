@@ -2,8 +2,10 @@ import os
 
 import lesson2.lesson2 as l2
 import lesson4.lesson4 as l4
+import util.file_helper as fh
 
 lem_directory = '/Users/a.merenova/Desktop/projects/python/infosearch/lems'
+main_directory = '/Users/a.merenova/Desktop/projects/python/infosearch/'
 
 
 def search_word_vector(words, all_unique_words):
@@ -66,6 +68,16 @@ def calculate_file_vector(file_name, all_unique_words, words_idf):
     return vector
 
 
+def convert_index_file_to_dict():
+    result_dict = {}
+    with open(fh.get_file_name('index.txt', main_directory), 'r') as index_file:
+        for line in index_file:
+            index = line.split('.')[0]
+            page_name = line.split(' ')[1]
+            result_dict.update({index: page_name})
+    return result_dict
+
+
 def main():
     print('Введите Ваш запрос')
     query = input()
@@ -89,7 +101,11 @@ def main():
         res = round(vector_multiplication / (file_vector_length * vector_length), 3)
         cos_sim.update({file_name: res})
     cos_sim = dict(sorted(cos_sim.items(), key=lambda item: item[1], reverse=True))
-    print(cos_sim)
+    page_indexes = convert_index_file_to_dict()
+    for key in cos_sim.keys():
+        index = key[4:].replace('.txt', '')
+        page = page_indexes.get(index)
+        print(page)
     # max_distance = max(cos_sim.items(), key=lambda x: x[1])
     # print(max_distance)
 
