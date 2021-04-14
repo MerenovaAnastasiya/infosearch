@@ -1,5 +1,5 @@
 import os
-
+import math
 import lesson2.lesson2 as l2
 import lesson4.lesson4 as l4
 import util.file_helper as fh
@@ -40,7 +40,7 @@ def calculate_vector_length(vector):
     length = 0
     for coordinate in vector:
         length += coordinate ** 2
-    return length
+    return math.sqrt(length)
 
 
 def find_all_unique_words(file_names):
@@ -85,26 +85,24 @@ def main():
     all_unique_words = find_all_unique_words(all_file_names)
     words = l2.lemmatize(query)
     vector = search_word_vector(words, all_unique_words)
-    vector_length = calculate_vector_length(vector)
-    print('vector = ' + str(vector))
-    print('vector length = ' + str(vector_length))
+    vector_length = round(calculate_vector_length(vector), 3)
     words_idf = l4.calculate_idf(all_file_names)
     cos_sim = {}
     for file_name in all_file_names:
         file_vector = calculate_file_vector(file_name, all_unique_words, words_idf)
-        file_vector_length = calculate_vector_length(file_vector)
+        file_vector_length = round(calculate_vector_length(file_vector), 3)
         vector_multiplication = 0
         for i in range(len(all_unique_words)):
             query_vector_coordinate = vector[i]
             file_vector_coordinate = file_vector[i]
             vector_multiplication += query_vector_coordinate * file_vector_coordinate
+        vector_multiplication = round(vector_multiplication, 3)
         res = round(vector_multiplication / (file_vector_length * vector_length), 3)
         cos_sim.update({file_name: res})
     cos_sim = dict(sorted(cos_sim.items(), key=lambda item: item[1], reverse=True))
     page_indexes = convert_index_file_to_dict()
     for key in cos_sim.keys():
         index = key[4:].replace('.txt', '')
-        page = page_indexes.get(index)
         print(page_indexes.get(index) + ' ' + str(cos_sim.get(key)))
     # max_distance = max(cos_sim.items(), key=lambda x: x[1])
     # print(max_distance)
